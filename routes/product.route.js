@@ -117,7 +117,7 @@ productRouter.get("/", async (req, res) => {
  */
 
 
-productRouter.post("/add", async (req, res) => {
+productRouter.post("/add", adminAuth, async (req, res) => {
     try {
         const product = new ProductModel(req.body)
         await product.save()
