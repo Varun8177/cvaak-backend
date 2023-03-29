@@ -5,7 +5,46 @@ const bcrypt = require('bcrypt');
 const userRouter = express.Router()
 require("dotenv").config()
 
+/**
+* @swagger
+* components:
+*   schemas:
+*       User:
+*           type: object
+*           properties:
+*               email:
+*                   type: string
+*                   description: The user's email address
+*               password:
+*                   type: string
+*                   description: The user's password
+*               location:
+*                   type: string
+*                   description: The user's location
+*               role:
+*                   type: string
+*                   description: The user's role, e.g. admin or regular user
+*/
 
+
+// All users
+
+/**
+ * @swagger
+ * /users/:
+ *   get:
+ *      tags: [Users]
+ *      summary: This will get all the user data from the database
+ *      responses:
+ *          200:
+ *              description: The list of all the users
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: "#/components/schemas/User"
+*/
 userRouter.get("/", async (req, res) => {
     try {
         const users = await UserModel.find()
@@ -17,6 +56,31 @@ userRouter.get("/", async (req, res) => {
     }
 })
 
+// Registration
+
+/**
+ * @swagger
+ * /users/register:
+ *  post:
+ *      tags: [Users]
+ *      summary: Register a user
+ *      description: This will register a new user to the database
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: "#/components/schemas/User"
+ *      responses:
+ *          200:
+ *              description: User has been registered
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: "#/components/schemas/User"
+ */
 userRouter.post("/register", async (req, res) => {
     const { email, password, location, role } = req.body
     const users = await UserModel.findOne({ email })
@@ -49,7 +113,43 @@ userRouter.post("/register", async (req, res) => {
     }
 })
 
+// Login
 
+/**
+ * @swagger
+ * /users/login:
+ *  post:
+ *      tags: [Users]
+ *      summary: Register a user
+ *      description: This will Login a user.
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          email:
+ *                              type: string
+ *                              description: email used while registering
+ *                          password: 
+ *                              type: string
+ *                              description: password used while registering           
+ *      responses:
+ *          200:
+ *              description: User has been registered
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message: 
+ *                                  type: string
+ *                                  example: Login Successfull
+ *                              token: 
+ *                                  type: string
+ *                                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDIwNzdjZTM0YWUyYTMyYWU0NzU2NzciLCJpYXQiOjE2Nzk4NDk3Mjh9.i9kJY-UY4TZBza8Y4FKH7aypRH4m2eK0Je74pn"
+ */
 userRouter.post("/login", async (req, res) => {
     const { email, password } = req.body
     console.log("body")
