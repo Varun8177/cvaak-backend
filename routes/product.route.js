@@ -83,6 +83,50 @@ productRouter.get("/", async (req, res) => {
 
 /**
  * @swagger
+ * /products/{productId}:
+ *   get:
+ *     summary: Get a product by ID
+ *     description: Retrieves a single product with the specified ID.
+ *     parameters:
+ *       - in: path
+ *         name: productId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
+ *       '404':
+ *         description: Product not found
+ *       '500':
+ *         description: Internal server error
+ */
+
+
+productRouter.get("/:productId", async (req, res) => {
+    const id = req.params.productId;
+    try {
+        const product = await ProductModel.findById(id);
+        if (!product) {
+            return res.status(404).send({
+                "message": "Product not found"
+            });
+        }
+        res.status(200).send(product);
+    } catch (error) {
+        res.status(400).send({
+            "message": error.message
+        });
+    }
+});
+
+
+/**
+ * @swagger
  * /products/add:
  *   post:
  *     tags: [product]
