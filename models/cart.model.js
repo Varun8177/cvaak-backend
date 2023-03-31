@@ -7,7 +7,7 @@ const cartSchema = mongoose.Schema({
     "price": Number,
     "strike-price": String,
     "discount-percent": String,
-    "maxQty": Number,
+    "qty": Number,
     "rating": String,
     "CardRatingDetail": String,
     "description": String,

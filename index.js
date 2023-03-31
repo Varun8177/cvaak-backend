@@ -28,6 +28,9 @@ const options = {
         servers: [
             {
                 url: "https://black-skirt.cyclic.app/"
+            },
+            {
+                url: "http://localhost:8080"
             }
         ]
     },
