@@ -187,7 +187,8 @@ productRouter.post("/add", adminAuth, async (req, res) => {
         const product = new ProductModel(req.body)
         await product.save()
         res.status(200).send({
-            "message": "Product successfully created"
+            "message": "Product successfully created",
+            product
         })
     } catch (error) {
         res.status(400).send({
@@ -246,9 +247,10 @@ productRouter.patch("/update/:productId", adminAuth, async (req, res) => {
     const id = req.params.productId
     const changes = req.body
     try {
-        const new_note = await ProductModel.findByIdAndUpdate({ _id: id }, changes)
+        const product = await ProductModel.findByIdAndUpdate({ _id: id }, changes)
         res.status(200).send({
-            "message": "Note successfully updated"
+            "message": "Product successfully updated",
+            product
         })
     } catch (error) {
         res.status(400).send({
@@ -300,7 +302,6 @@ productRouter.patch("/update/:productId", adminAuth, async (req, res) => {
 
 productRouter.delete("/delete/:productId", adminAuth, async (req, res) => {
     const id = req.params.productId
-    const prod = await ProductModel.findOne({ _id: id })
     try {
         const product = await ProductModel.findByIdAndDelete({ _id: id })
         res.status(200).send({

@@ -198,7 +198,7 @@ CartRouter.patch("/update/:itemId", async (req, res) => {
         const updatedItem = await CartModel.findByIdAndUpdate({ _id: id }, changes)
         res.status(200).send({
             "message": "Item successfully updated",
-            updatedItem
+            item: updatedItem
         })
     } catch (error) {
         res.status(400).send({
@@ -253,7 +253,7 @@ CartRouter.delete("/delete/:itemId", async (req, res) => {
                 const deletedItem = await CartModel.findByIdAndDelete({ _id: id })
                 res.status(200).send({
                     "message": "Item successfully deleted",
-                    deletedItem
+                    item: deletedItem
                 })
             } catch (error) {
                 res.status(400).send({

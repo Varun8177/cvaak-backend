@@ -160,7 +160,8 @@ userRouter.post("/login", async (req, res) => {
                 if (result) {
                     res.status(200).send({
                         "message": "Login Successfull",
-                        "token": jwt.sign({ "userId": user._id, role: user.role }, process.env.keyword)
+                        "token": jwt.sign({ "userId": user._id, role: user.role, username: user.name }, process.env.keyword),
+                        user
                     })
                 } else {
                     res.status(400).send({
@@ -181,5 +182,35 @@ userRouter.post("/login", async (req, res) => {
     }
 })
 
+userRouter.get("/verify", (req, res) => {
+    const token = req.headers.auth.split(" ")[1]
+    if (token) {
+        jwt.verify(token, process.env.keyword, function (err, decoded) {
+            if (err) {
+                res.status(400).send({
+                    "admin": false,
+                    username: decoded.username
+                })
+            } else {
+                if (decoded.role !== "admin") {
+                    res.status(400).send({
+                        "admin": false,
+                        username: decoded.username
+                    })
+                } else {
+                    res.status(200).send({
+                        "admin": true,
+                        username: decoded.username
+                    })
+                }
+            }
+        })
+    } else {
+        res.status(400).send({
+            "message": "Invalid token"
+        })
+    }
+}
+)
 
 module.exports = userRouter
