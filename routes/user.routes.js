@@ -161,7 +161,6 @@ userRouter.post("/login", async (req, res) => {
                     res.status(200).send({
                         "message": "Login Successfull",
                         "token": jwt.sign({ "userId": user._id, role: user.role, username: user.name }, process.env.keyword),
-                        user
                     })
                 } else {
                     res.status(400).send({
