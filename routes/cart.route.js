@@ -131,7 +131,6 @@ CartRouter.get("/", async (req, res) => {
 
 
 CartRouter.post("/add", async (req, res) => {
-    console.log(req.body)
     try {
         const Item = new CartModel(req.body)
         await Item.save()
@@ -272,26 +271,41 @@ CartRouter.delete("/delete/:itemId", async (req, res) => {
     }
 })
 
-CartRouter.delete("/delete/reset", async (req, res) => {
+// CartRouter.delete("/delete/reset", async (req, res) => {
+//     console.log(".....................................................................")
+//     const token = req.headers.auth.split(" ")[1]
+//     if (token) {
+//         const decoded = jwt.verify(token, process.env.keyword);
+//         try {
+//             const deletedItem = await CartModel.find()
+//             res.status(200).send({
+//                 "message": "Successfully Cleared Cart",
+//             })
+//         } catch (error) {
+//             res.status(400).send({
+//                 "message": error.message
+//             })
+//         }
+//     } else {
+//         res.status(400).send({
+//             "message": "Authorization Failed"
+//         })
+//     }
+// })
+
+CartRouter.delete("/delete/", async (req, res) => {
     const token = req.headers.auth.split(" ")[1]
     if (token) {
         const decoded = jwt.verify(token, process.env.keyword);
         try {
-            const deletedItem = await CartModel.deleteMany({ userId: decoded.userId })
-            res.status(200).send({
-                "message": "Successfully Cleared Cart",
-                "item": deletedItem
-            })
+            const product = await CartModel.deleteMany({ userId: decoded.userId })
+
+            res.send(product)
         } catch (error) {
-            res.status(400).send({
-                "message": error.message
+            res.send({
+                message: "error"
             })
         }
-    } else {
-        res.status(400).send({
-            "message": "Authorization Failed"
-        })
     }
 })
-
 module.exports = CartRouter
