@@ -272,4 +272,26 @@ CartRouter.delete("/delete/:itemId", async (req, res) => {
     }
 })
 
+CartRouter.delete("/delete/reset", async (req, res) => {
+    const token = req.headers.auth.split(" ")[1]
+    if (token) {
+        const decoded = jwt.verify(token, process.env.keyword);
+        try {
+            const deletedItem = await CartModel.deleteMany({ userId: decoded.userId })
+            res.status(200).send({
+                "message": "Successfully Cleared Cart",
+                "item": deletedItem
+            })
+        } catch (error) {
+            res.status(400).send({
+                "message": error.message
+            })
+        }
+    } else {
+        res.status(400).send({
+            "message": "Authorization Failed"
+        })
+    }
+})
+
 module.exports = CartRouter
